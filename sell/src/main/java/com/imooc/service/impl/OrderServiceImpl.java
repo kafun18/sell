@@ -101,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
         List<CartDTO> cartDTOList = orderDTO.getOrderDetailList().stream().map(e ->
                 new CartDTO(e.getProductId(), e.getProductQuantity())
         ).collect(Collectors.toList());
-//        productService.decreaseStock(cartDTOList);
+        productService.decreaseStock(cartDTOList);
 
         //发送websocket消息
 //        webSocket.sendMessage(orderDTO.getOrderId());
@@ -109,11 +109,11 @@ public class OrderServiceImpl implements OrderService {
         return orderDTO;
     }
 
-    /*@Override
 
-public OrderDTO findOne(String orderId) {
+    @Override
+    public OrderDTO findOne(String orderId) {
 
-        OrderMaster orderMaster = orderMasterRepository.findOne(orderId);
+        OrderMaster orderMaster = orderMasterRepository.findById(orderId).get();
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }
@@ -128,7 +128,7 @@ public OrderDTO findOne(String orderId) {
         orderDTO.setOrderDetailList(orderDetailList);
 
         return orderDTO;
-    }*/
+    }
     @Override
     public Page<OrderDTO> findList(String buyerOpenid, Pageable pageable) {
         Page<OrderMaster> orderMasterPage = orderMasterRepository.findByBuyerOpenid(buyerOpenid, pageable);

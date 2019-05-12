@@ -13,7 +13,9 @@ import com.imooc.exception.SellException;
 import com.imooc.repository.OrderDetailRepository;
 import com.imooc.repository.OrderMasterRepository;
 import com.imooc.service.OrderService;
+import com.imooc.service.PayService;
 import com.imooc.service.ProductService;
+import com.imooc.service.PushMessageService;
 import com.imooc.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -112,19 +114,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO findOne(String orderId) {
-
+        //查询买家订单
         OrderMaster orderMaster = orderMasterRepository.findById(orderId).get();
         if (orderMaster == null) {
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }
-
+        //查询买家订单详情
         List<OrderDetail> orderDetailList = orderDetailRepository.findByOrderId(orderId);
         if (CollectionUtils.isEmpty(orderDetailList)) {
             throw new SellException(ResultEnum.ORDERDETAIL_NOT_EXIST);
         }
 
         OrderDTO orderDTO = new OrderDTO();
+        //买家信息传入到DTO
         BeanUtils.copyProperties(orderMaster, orderDTO);
+        //订单详情传入DTO
         orderDTO.setOrderDetailList(orderDetailList);
 
         return orderDTO;
@@ -138,7 +142,7 @@ public class OrderServiceImpl implements OrderService {
         return new PageImpl<OrderDTO>(orderDTOList, pageable, orderMasterPage.getTotalElements());
     }
 
-    /*@Override
+    @Override
     @Transactional
     public OrderDTO cancel(OrderDTO orderDTO) {
         OrderMaster orderMaster = new OrderMaster();
@@ -170,13 +174,13 @@ public class OrderServiceImpl implements OrderService {
 
         //如果已支付, 需要退款
         if (orderDTO.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) {
-            payService.refund(orderDTO);
+//            payService.refund(orderDTO);
         }
 
         return orderDTO;
-    }*/
+    }
 
-    /*@Override
+    @Override
     @Transactional
     public OrderDTO finish(OrderDTO orderDTO) {
         //判断订单状态
@@ -196,10 +200,10 @@ public class OrderServiceImpl implements OrderService {
         }
 
         //推送微信模版消息
-        pushMessageService.orderStatus(orderDTO);
+//        pushMessageService.orderStatus(orderDTO);
 
         return orderDTO;
-    }*/
+    }
 
     @Override
     @Transactional

@@ -31,7 +31,7 @@ public class OrderServiceImplTest {
 
     private final String BUYER_OPENID = "1101110";
 
-    private final String ORDER_ID = "1497183332311989948";
+    private final String ORDER_ID = "1557579072104714395";
 
     @Test
     public void create() throws Exception {
@@ -48,12 +48,12 @@ public class OrderServiceImplTest {
         o1.setProductId("123456");
         o1.setProductQuantity(1);
 
-//        OrderDetail o2 = new OrderDetail();
-//        o2.setProductId("123457");
-//        o2.setProductQuantity(2);
+        OrderDetail o2 = new OrderDetail();
+        o2.setProductId("123457");
+        o2.setProductQuantity(2);
 
         orderDetailList.add(o1);
-//        orderDetailList.add(o2);
+        orderDetailList.add(o2);
 
         orderDTO.setOrderDetailList(orderDetailList);
 
@@ -62,10 +62,9 @@ public class OrderServiceImplTest {
         Assert.assertNotNull(result);
     }
 
-    /*@Test
+    @Test
     public void findOne() throws Exception {
-//        OrderDTO result = orderService.findOne(ORDER_ID);
-        OrderDTO result = orderService.findOne();
+        OrderDTO result = orderService.findOne(ORDER_ID);
         log.info("【查询单个订单】result={}", result);
         Assert.assertEquals(ORDER_ID, result.getOrderId());
     }
@@ -97,7 +96,7 @@ public class OrderServiceImplTest {
         OrderDTO result = orderService.paid(orderDTO);
         Assert.assertEquals(PayStatusEnum.SUCCESS.getCode(), result.getPayStatus());
     }
-
+/*
     @Test
     public void list() {
         PageRequest request = new PageRequest(0,2);

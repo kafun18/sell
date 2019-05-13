@@ -8,7 +8,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.util.Date;
 
-/**
+/** 日期毫秒转成秒
+ *  Date转成Long
  * Created by 廖师兄
  * 2017-06-19 00:29
  */

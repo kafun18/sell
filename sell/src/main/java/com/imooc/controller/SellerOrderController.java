@@ -91,7 +91,7 @@ public class SellerOrderController {
         }
 
         map.put("orderDTO", orderDTO);
-        return new ModelAndView("order/detail", map);
+        return new ModelAndView("order/finddetail", map);
     }
 
     /**

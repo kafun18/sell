@@ -2,8 +2,10 @@ package com.imooc.dataobject;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Date;
 
 /**
  * Created by 廖师兄
@@ -14,6 +16,7 @@ import javax.persistence.Id;
 public class SellerInfo {
 
     @Id
+    @Column(name = "id")
     private String sellerId;
 
     private String username;
@@ -21,4 +24,5 @@ public class SellerInfo {
     private String password;
 
     private String openid;
+
 }

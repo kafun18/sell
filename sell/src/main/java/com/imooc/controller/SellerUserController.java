@@ -62,6 +62,7 @@ public class SellerUserController {
         //3. 设置token至cookie
         CookieUtil.set(response, CookieConstant.TOKEN, token, expire);
 
+//        return new ModelAndView("redirect:" + projectUrlConfig.getSell() + "/sell/seller/order/list");
         return new ModelAndView("redirect:" + projectUrlConfig.getSell() + "/sell/seller/order/list");
 
     }

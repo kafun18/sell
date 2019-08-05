@@ -33,3 +33,11 @@ projecturl:
   wechatOpenAuthorize: http://localhost:8080
   sell: http://localhost:8080
 #  sell: http://sell.natapp4.cc
+
+#日志级别，显示sql打印信息
+logging:
+  level:
+      com.imooc.dataobject.mapper: trace
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+

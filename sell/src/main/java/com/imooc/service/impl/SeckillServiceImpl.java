@@ -1,8 +1,10 @@
 package com.imooc.service.impl;
 
 import com.imooc.exception.SellException;
+import com.imooc.service.RedisLock;
 import com.imooc.service.SeckillService;
 import com.imooc.utils.KeyUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -10,6 +12,12 @@ import java.util.Map;
 
 @Service
 public class SeckillServiceImpl implements SeckillService {
+
+    private static final int TIMEOUT = 300 * 1000; //超时时间10s
+
+    @Autowired
+    private RedisLock redisLock;
+
     /**
      * 国庆活动，皮蛋粥特价，限量100000份
      */
@@ -31,7 +39,7 @@ public class SeckillServiceImpl implements SeckillService {
     private String queryMap(String productId) {
         return "国庆活动，皮蛋粥特价，限量份"
                 + products.get(productId)
-                + " 还剩:" + stock.get(productId)+" 份"
+                + " 还剩:" + stock.get(productId) + " 份"
                 + " 该商品成功下单用户数目:"
                 + orders.size() + "人";
     }
@@ -43,8 +51,13 @@ public class SeckillServiceImpl implements SeckillService {
     }
 
     @Override
-    public synchronized void orderProductMockDiffUser(String productId) {
-
+    public void orderProductMockDiffUser(String productId) {
+        //加锁
+        long currentime = System.currentTimeMillis();
+        long time = currentime + TIMEOUT;
+        if (!redisLock.lock(productId, String.valueOf(time))){
+            throw new SellException(101,"哎哟喂，人也太多了，换个姿势再试试~~~");
+        }
         //1.查询该商品库存，为0则活动结束
         int stockNum = stock.get(productId);
         if (stockNum == 0) {
@@ -59,7 +72,10 @@ public class SeckillServiceImpl implements SeckillService {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            stock.put(productId,stockNum);
+            stock.put(productId, stockNum);
         }
+        //解锁
+        redisLock.unlock(productId,String.valueOf(time));
+
     }
 }

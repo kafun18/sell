@@ -8,6 +8,7 @@ import com.imooc.exception.SellException;
 import com.imooc.repository.ProductInfoRepository;
 import com.imooc.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -22,13 +23,15 @@ import java.util.List;
  * 2017-05-09 17:31
  */
 @Service
+//相当于@Cacheable(cacheNames = "product")
+//@CacheConfig(cacheNames = "product")
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductInfoRepository repository;
 
     @Override
-    @Cacheable(cacheNames = "product", key = "123")
+//    @Cacheable( key = "123")
     public ProductInfo findOne(String productId) {
         return repository.findById(productId).get();
     }
@@ -44,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @CachePut(cacheNames = "product",key = "123")
+//    @CachePut( key = "123")
     public ProductInfo save(ProductInfo productInfo) {
         return repository.save(productInfo);
     }

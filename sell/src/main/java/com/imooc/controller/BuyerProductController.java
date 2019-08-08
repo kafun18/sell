@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -36,8 +37,11 @@ public class BuyerProductController {
 
     @GetMapping("/list")
 //    @Cacheable第一次把下面方法走完，之后不再走方法直接从缓存取值
-//    @Cacheable(cacheNames = "product", key = "123")
-    public ResultVO list() {
+    /*key不填的话会默认取方法的参数,condition判断是否为真，为真就跑@Cacheable，否就不做缓存,
+    unless判断ResultVO的code值不等于的时候为真*/
+    @Cacheable(cacheNames = "product", key = "#sellerId",
+            condition = "#sellerId.length()>3", unless = "#result.getCode()!=0")
+    public ResultVO list(@RequestParam("sellerId") String sellerId) {
         //1. 查询所有的上架商品
         List<ProductInfo> productInfoList = productService.findUpAll();
 
